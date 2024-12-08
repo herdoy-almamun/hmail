@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { Container } from "@radix-ui/themes";
-
 const Home = () => {
   return (
-    <Container>
+    <div>
       <Button>Click Me</Button>
-    </Container>
+    </div>
   );
 };
 

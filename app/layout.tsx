@@ -3,6 +3,9 @@ import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { Sidebar } from "@/components/sidebar";
+import Header from "./header";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,7 +33,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Theme>{children}</Theme>
+        <Theme>
+          <SidebarProvider>
+            <Sidebar />
+            <SidebarInset>
+              <main>
+                <Header />
+                {children}
+              </main>
+            </SidebarInset>
+          </SidebarProvider>
+        </Theme>
       </body>
     </html>
   );
