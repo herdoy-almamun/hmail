@@ -1,9 +1,9 @@
-import Joi from "joi";
-import { NextRequest, NextResponse } from "next/server";
-import { joiPasswordExtendCore } from "joi-password";
 import prisma from "@/prisma/client";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import Joi from "joi";
+import { joiPasswordExtendCore } from "joi-password";
+import jwt from "jsonwebtoken";
+import { NextRequest, NextResponse } from "next/server";
 
 interface User {
   firstName: string;
@@ -62,13 +62,13 @@ export const POST = async (request: NextRequest) => {
         email: newUser.email,
         firstName: newUser.firstName,
         lastName: newUser.lastName,
+        image: newUser.image,
       },
       process.env.JWT_SECRET_KEY!
     );
 
     return NextResponse.json({ success: true, token }, { status: 201 });
   } catch (err) {
-    console.error("Error occurred:", err);
     return NextResponse.json(
       { success: false, message: "An error occurred during registration" },
       { status: 500 }

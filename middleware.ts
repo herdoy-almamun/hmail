@@ -6,8 +6,6 @@ export async function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value; // Read token from cookies
   const { pathname } = req.nextUrl;
 
-  console.log("Token:", token, "Pathname:", pathname);
-
   if (PUBLIC_FILE.test(pathname)) {
     return NextResponse.next();
   }
