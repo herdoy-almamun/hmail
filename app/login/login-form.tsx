@@ -14,7 +14,6 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import axios from "axios";
 import Joi from "joi";
 import { joiPasswordExtendCore } from "joi-password";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -43,7 +42,6 @@ const formSchema = Joi.object({
 });
 
 const LoginForm = () => {
-  const router = useRouter();
   const form = useForm<FormData>({
     resolver: joiResolver(formSchema),
     defaultValues: {
@@ -60,7 +58,7 @@ const LoginForm = () => {
           document.cookie = `token=${res.data.token}; path=/; Secure; SameSite=Strict`;
           toast.success("Login Success");
           setTimeout(() => {
-            router.push("/");
+            window.location.href = "/";
           }, 500);
         }
       })

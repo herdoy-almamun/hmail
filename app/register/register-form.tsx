@@ -15,7 +15,6 @@ import { Grid } from "@radix-ui/themes";
 import axios from "axios";
 import Joi from "joi";
 import { joiPasswordExtendCore } from "joi-password";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -47,8 +46,6 @@ const formSchema = Joi.object({
 });
 
 const RegisterForm = () => {
-  const router = useRouter();
-
   const form = useForm<FormData>({
     resolver: joiResolver(formSchema),
     defaultValues: {
@@ -67,7 +64,7 @@ const RegisterForm = () => {
           document.cookie = `token=${res.data.token}; path=/; Secure; SameSite=Strict`;
           toast.success("Register Success");
           setTimeout(() => {
-            router.push("/");
+            window.location.href = "/";
           }, 500);
         }
       })

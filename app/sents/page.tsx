@@ -1,13 +1,13 @@
 import AuthLayoutProvider from "@/components/auth-layout-provider";
-import Inboxs from "@/components/inboxs";
-const Home = () => {
+import Sents from "@/components/sents";
+const SentMails = () => {
   return (
     <AuthLayoutProvider>
       <div className="p-2">
-        <Inboxs />
+        <Sents />
       </div>
     </AuthLayoutProvider>
   );
 };
 
-export default Home;
+export default SentMails;

@@ -1,3 +1,4 @@
+"use client";
 import { File, Inbox, SendHorizontal } from "lucide-react";
 import {
   SidebarGroup,
@@ -6,16 +7,18 @@ import {
   SidebarMenu as UISidebarMenu,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 const items = [
   {
     title: "Inbox",
-    url: "/inbox",
+    url: "/",
     icon: Inbox,
   },
   {
-    title: "Send",
-    url: "/send",
+    title: "Sents",
+    url: "/sents",
     icon: SendHorizontal,
   },
   {
@@ -25,13 +28,20 @@ const items = [
   },
 ];
 export function SidebarMenu() {
+  const currentPath = usePathname();
   return (
     <SidebarGroup>
       <UISidebarMenu>
         {items.map((item) => (
           <Link href={item.url} key={item.title}>
             <SidebarMenuItem>
-              <SidebarMenuButton tooltip={item.title}>
+              <SidebarMenuButton
+                tooltip={item.title}
+                className={cn(
+                  "hover:text-primary",
+                  currentPath === item.url && "text-primary"
+                )}
+              >
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
               </SidebarMenuButton>
