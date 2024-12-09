@@ -6,17 +6,16 @@ export async function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value; // Read token from cookies
   const { pathname } = req.nextUrl;
 
-  // Allow public files (e.g., images, JS, CSS, etc.)
+  console.log("Token:", token, "Pathname:", pathname);
+
   if (PUBLIC_FILE.test(pathname)) {
     return NextResponse.next();
   }
 
-  // Redirect logged-in users away from login/register pages
   if (token && (pathname === "/login" || pathname === "/register")) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  // Redirect unauthenticated users to the login page
   if (!token && pathname !== "/login" && pathname !== "/register") {
     return NextResponse.redirect(new URL("/login", req.url));
   }
