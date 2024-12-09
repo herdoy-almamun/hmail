@@ -1,9 +1,10 @@
+import AuthLayoutProvider from "@/components/auth-layout-provider";
 import { Button } from "@/components/ui/button";
 const Home = () => {
   return (
-    <div>
+    <AuthLayoutProvider>
       <Button>Click Me</Button>
-    </div>
+    </AuthLayoutProvider>
   );
 };
 

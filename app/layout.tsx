@@ -2,10 +2,9 @@ import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Sidebar } from "@/components/sidebar";
-import Header from "./header";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,16 +33,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Theme>
-          <SidebarProvider>
-            <Sidebar />
-            <SidebarInset>
-              <main>
-                <Header />
-                {children}
-              </main>
-            </SidebarInset>
-          </SidebarProvider>
+          <main>{children}</main>
         </Theme>
+        <ToastContainer />
       </body>
     </html>
   );
