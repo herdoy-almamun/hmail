@@ -44,7 +44,9 @@ export function SidebarMenu() {
                 tooltip={item.title}
                 className={cn(
                   "hover:text-primary",
-                  currentPath === item.url && "text-primary"
+                  currentPath === item.url && "text-primary",
+                  item.url === "/compose" &&
+                    "bg-primary text-white hover:bg-primary hover:text-white"
                 )}
               >
                 {item.icon && <item.icon />}
