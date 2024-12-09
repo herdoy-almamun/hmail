@@ -12,8 +12,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { Grid } from "@radix-ui/themes";
+import axios from "axios";
 import Joi from "joi";
+import { joiPasswordExtendCore } from "joi-password";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 interface FormData {
   firstName: string;
@@ -21,7 +25,7 @@ interface FormData {
   email: string;
   password: string;
 }
-
+const joiPassword = Joi.extend(joiPasswordExtendCore);
 const formSchema = Joi.object({
   firstName: Joi.string().min(1).max(255).required().label("First Name"),
   lastName: Joi.string().min(1).max(255).required().label("Last Name"),
@@ -30,22 +34,59 @@ const formSchema = Joi.object({
     .max(1000)
     .required()
     .label("Email"),
-  password: Joi.string().min(8).max(1000).required().label("Password"),
+  password: joiPassword
+    .string()
+    .minOfSpecialCharacters(2)
+    .minOfLowercase(2)
+    .minOfUppercase(2)
+    .minOfNumeric(2)
+    .noWhiteSpaces()
+    .onlyLatinCharacters()
+    .doesNotInclude(["password"])
+    .required(),
 });
 
 const RegisterForm = () => {
+  const router = useRouter();
+
   const form = useForm<FormData>({
     resolver: joiResolver(formSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = form.handleSubmit((data) => {
+    axios
+      .post("/api/auth/register", data)
+      .then((res) => {
+        if (res.data.success && res.data.token) {
+          document.cookie = `token=${res.data.token}; path=/; Secure; SameSite=Strict`;
+          toast.success("Register Success");
+          setTimeout(() => {
+            router.push("/");
+          }, 500);
+        }
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          toast.error(error.response.data.message);
+        }
+        if (error.response.status === 404) {
+          toast.error("Something went worn!");
+        }
+        if (error.response.status >= 500) {
+          toast.error("Internal server error");
+        }
+      });
   });
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit((data) => {
-          console.log(data);
-        })}
-        className="space-y-3 w-full"
-      >
+      <form onSubmit={onSubmit} className="space-y-3 w-full">
         <Grid columns="1fr 1fr" gap="3">
           <FormField
             control={form.control}
