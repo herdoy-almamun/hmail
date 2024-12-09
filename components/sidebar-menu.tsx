@@ -1,5 +1,5 @@
 "use client";
-import { File, Inbox, SendHorizontal } from "lucide-react";
+import { File, Inbox, SendHorizontal, PencilIcon } from "lucide-react";
 import {
   SidebarGroup,
   SidebarMenuButton,
@@ -12,6 +12,11 @@ import { usePathname } from "next/navigation";
 
 const items = [
   {
+    title: "Compose",
+    url: "/compose",
+    icon: PencilIcon,
+  },
+  {
     title: "Inbox",
     url: "/",
     icon: Inbox,
@@ -23,7 +28,7 @@ const items = [
   },
   {
     title: "Draft",
-    url: "/draft",
+    url: "/drafts",
     icon: File,
   },
 ];
