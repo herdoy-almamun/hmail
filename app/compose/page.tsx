@@ -14,17 +14,16 @@ const Compose = () => {
   const [receiver, setReceiver] = useState("");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const isSelectReceiver = receiver.slice(-4) === ".com" ? true : false;
+    const setEmail = receiver && !isSelectReceiver ? receiver : null;
     axios
-      .get(
-        `/api/users/?email=${receiver && !isSelectReceiver ? receiver : null}`
-      )
-      .then((res) => setUsers(res.data));
+      .get<User[]>(`/api/users/?email=${setEmail}`)
+      .then((res) => setUsers(res.data.filter((u) => u.id !== user?.id)));
   }, [receiver]);
 
-  const { user } = useContext(AuthContext);
   return (
     <AuthLayoutProvider>
       <Grid className="h-[calc(100dvh-4rem)] px-2" rows="50px 50px 1fr 50px">
