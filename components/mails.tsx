@@ -1,18 +1,17 @@
 "use client";
 
-import { AuthContext } from "@/app/auth-provider";
-import useMail from "@/hooks/use-mail";
+import { Mail } from "@prisma/client";
 import { Flex } from "@radix-ui/themes";
 import { Ellipsis, Mail as MailIcon } from "lucide-react";
-import { useContext } from "react";
 
-const Inboxs = () => {
-  const { user } = useContext(AuthContext);
-  const { inboxMails } = useMail(user?.email!);
+interface Props {
+  mails: Mail[];
+}
 
+const Mails = ({ mails }: Props) => {
   return (
     <div>
-      {inboxMails.map((mail) => (
+      {mails.map((mail) => (
         <Flex
           key={mail.id}
           align="center"
@@ -33,4 +32,4 @@ const Inboxs = () => {
   );
 };
 
-export default Inboxs;
+export default Mails;

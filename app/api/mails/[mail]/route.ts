@@ -13,6 +13,9 @@ export async function GET(
       where: {
         OR: [{ sender: mail }, { receiver: mail }],
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return NextResponse.json(mails, { status: 200 });

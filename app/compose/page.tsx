@@ -1,26 +1,92 @@
+"use client";
 import AuthLayoutProvider from "@/components/auth-layout-provider";
 import { Button } from "@/components/ui/button";
+import { User } from "@prisma/client";
 import { Flex, Grid } from "@radix-ui/themes";
+import axios from "axios";
 import { Paperclip } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { AuthContext } from "../auth-provider";
 
 const Compose = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [receiver, setReceiver] = useState("");
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
+
+  useEffect(() => {
+    const isSelectReceiver = receiver.slice(-4) === ".com" ? true : false;
+    axios
+      .get(
+        `/api/users/?email=${receiver && !isSelectReceiver ? receiver : null}`
+      )
+      .then((res) => setUsers(res.data));
+  }, [receiver]);
+
+  const { user } = useContext(AuthContext);
   return (
     <AuthLayoutProvider>
       <Grid className="h-[calc(100dvh-4rem)] px-2" rows="50px 50px 1fr 50px">
+        <div className="relative border-b w-full">
+          <input
+            className="p-2 w-full h-full focus:outline-none"
+            type="email"
+            value={receiver}
+            onChange={(e) => setReceiver(e.target.value)}
+            placeholder="To"
+          />
+          {users && receiver && (
+            <div className="absolute top-[40px] left-0 bg-white py-3">
+              {users.map((user) => (
+                <div
+                  key={user.id}
+                  className="px-4 py-1 hover:bg-gray-200 cursor-pointer"
+                  onClick={() => {
+                    setReceiver(user.email);
+                    setUsers([]);
+                  }}
+                >
+                  <span> {user.email} </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         <input
           className="border-b p-2 focus:outline-none"
-          type="email"
-          placeholder="To"
-        />
-        <input
-          className="border-b p-2 focus:outline-none"
+          value={subject}
+          onChange={(e) => setSubject(e.target.value)}
           type="text"
           placeholder="Subject"
         />
 
-        <textarea className="border-none p-2 focus:outline-none" />
+        <textarea
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          className="border-none p-2 focus:outline-none"
+        />
         <Flex align="center" gap="3" className="border-t">
-          <Button type="submit">Sent</Button>
+          <Button
+            onClick={() =>
+              axios
+                .post("/api/mails", {
+                  sender: user?.email,
+                  receiver,
+                  subject,
+                  body,
+                })
+                .then(() => {
+                  setReceiver("");
+                  setSubject("");
+                  setBody("");
+                  toast.success("Successfully sent mail");
+                })
+            }
+            type="submit"
+          >
+            Sent
+          </Button>
           <Button variant="ghost">
             <Paperclip />
           </Button>

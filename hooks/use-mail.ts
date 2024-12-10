@@ -1,8 +1,11 @@
+import { AuthContext } from "@/app/auth-provider";
 import { Mail } from "@prisma/client";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
-const useMail = (mail: string) => {
+const useMail = () => {
+  const { user } = useContext(AuthContext);
+  const mail = user?.email;
   const [mails, setMails] = useState<Mail[]>([]);
   const [inboxMails, setInboxMails] = useState<Mail[]>([]);
   const [sentMails, setSentMails] = useState<Mail[]>([]);

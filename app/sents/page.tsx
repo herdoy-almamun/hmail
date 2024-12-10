@@ -1,10 +1,13 @@
+"use client";
 import AuthLayoutProvider from "@/components/auth-layout-provider";
-import Sents from "@/components/sents";
+import Mails from "@/components/mails";
+import useMail from "@/hooks/use-mail";
 const SentMails = () => {
+  const { sentMails } = useMail();
   return (
     <AuthLayoutProvider>
       <div className="p-2">
-        <Sents />
+        <Mails mails={sentMails} />
       </div>
     </AuthLayoutProvider>
   );
