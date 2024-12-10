@@ -27,3 +27,31 @@ export async function GET(
     );
   }
 }
+
+export async function PUT(
+  request: NextRequest,
+  context: { params: Promise<{ mail: string }> }
+) {
+  try {
+    // Await the params to ensure they are resolved
+    const { mail } = await context.params;
+
+    const isExist = await prisma.mail.findUnique({ where: { id: mail } });
+    if (!isExist)
+      return NextResponse.json({ error: "Mail not fount" }, { status: 401 });
+    await prisma.mail.update({
+      where: {
+        id: mail,
+      },
+      data: { isReaded: isExist.isReaded ? false : true },
+    });
+
+    return NextResponse.json({ success: true, message: "Ok" }, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching mails:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch mails" },
+      { status: 500 }
+    );
+  }
+}

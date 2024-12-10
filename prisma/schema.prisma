@@ -23,6 +23,7 @@ model Mail {
   sender    String
   receiver  String
   subject   String
+  isReaded  Boolean  @default(false)
   body      String?
   image     String?
   createdAt DateTime @default(now())
