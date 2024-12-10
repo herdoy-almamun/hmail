@@ -1,13 +1,9 @@
-"use client";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Avatar, Flex } from "@radix-ui/themes";
+import { Flex } from "@radix-ui/themes";
 import { Search } from "lucide-react";
-import { useContext } from "react";
-import { AuthContext } from "./auth-provider";
+import { HeaderUser } from "./header-user";
 
 const Header = () => {
-  const { user } = useContext(AuthContext);
-  if (!user) return null;
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear border-b">
       <div className="flex items-center gap-4 px-4 w-full">
@@ -20,12 +16,7 @@ const Header = () => {
             placeholder="Search mail"
           />
         </Flex>
-        <Avatar
-          radius="full"
-          size="3"
-          src={user.image}
-          fallback={user.firstName}
-        />
+        <HeaderUser />
       </div>
     </header>
   );
