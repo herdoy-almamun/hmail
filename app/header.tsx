@@ -2,6 +2,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Flex } from "@radix-ui/themes";
 import { Search } from "lucide-react";
 import { HeaderUser } from "./header-user";
+import { HeaderNotification } from "./header-notifications";
 
 const Header = () => {
   return (
@@ -16,7 +17,10 @@ const Header = () => {
             placeholder="Search mail"
           />
         </Flex>
-        <HeaderUser />
+        <Flex align="center" gap="6">
+          <HeaderNotification />
+          <HeaderUser />
+        </Flex>
       </div>
     </header>
   );
