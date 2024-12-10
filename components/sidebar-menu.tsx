@@ -1,13 +1,13 @@
 "use client";
-import { File, Inbox, SendHorizontal, PencilIcon } from "lucide-react";
 import {
   SidebarGroup,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenu as UISidebarMenu,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { File, Inbox, PencilIcon, SendHorizontal } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const items = [
@@ -44,9 +44,8 @@ export function SidebarMenu() {
                 tooltip={item.title}
                 className={cn(
                   "hover:text-primary",
-                  currentPath === item.url && "text-primary",
-                  item.url === "/compose" &&
-                    "bg-primary text-white hover:bg-primary hover:text-white"
+                  currentPath === item.url &&
+                    "text-primary border border-primary"
                 )}
               >
                 {item.icon && <item.icon />}

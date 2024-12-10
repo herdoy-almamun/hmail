@@ -1,13 +1,13 @@
 "use client";
 import AuthLayoutProvider from "@/components/auth-layout-provider";
-import Mails from "@/components/mails";
-import useMail from "@/hooks/use-mail";
+import InboxMails from "@/components/inbox-mails";
+import useMails from "@/hooks/use-mails";
 const Home = () => {
-  const { inboxMails } = useMail();
+  const { inboxMails } = useMails();
   return (
     <AuthLayoutProvider>
       <div className="p-2">
-        <Mails mails={inboxMails} />
+        <InboxMails mails={inboxMails} />
       </div>
     </AuthLayoutProvider>
   );

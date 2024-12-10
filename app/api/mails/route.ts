@@ -21,9 +21,25 @@ const validateMail = (mail: Mail) => {
   return schema.validate(mail);
 };
 
-export const GET = async () => {
-  const mails = await prisma.mail.findMany();
-  return NextResponse.json(mails, { status: 200 });
+export const GET = async (request: NextRequest) => {
+  try {
+    const url = new URL(request.url);
+    const id = url.searchParams.get("id");
+    if (!id)
+      return NextResponse.json(
+        { success: false, message: "Please provide valid email" },
+        { status: 400 }
+      );
+    const mail = await prisma.mail.findUnique({
+      where: { id },
+    });
+    return NextResponse.json(mail, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, message: "Please provide valid email" },
+      { status: 400 }
+    );
+  }
 };
 
 export const POST = async (request: NextRequest) => {
