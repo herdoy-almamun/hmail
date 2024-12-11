@@ -17,7 +17,7 @@ const Header = () => {
             placeholder="Search mail"
           />
         </Flex>
-        <Flex align="center" gap="6">
+        <Flex align="center" gap={{ initial: "2", md: "6" }}>
           <HeaderNotification />
           <HeaderUser />
         </Flex>

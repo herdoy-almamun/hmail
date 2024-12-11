@@ -7,6 +7,8 @@ import { formatDate } from "@/lib/utils";
 import { Avatar, Flex } from "@radix-ui/themes";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth-provider";
+import Replays from "./replays";
+import CreateReply from "./create-reply";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -52,6 +54,9 @@ const MailDetails = ({ params }: Props) => {
         </Flex>
         <Separator />
         <p>{mail?.body}</p>
+        <Separator />
+        <CreateReply mailId={mail?.id!} />
+        <Replays mailId={mail?.id!} />
       </div>
     </AuthLayoutProvider>
   );

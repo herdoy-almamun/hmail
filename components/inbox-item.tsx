@@ -28,7 +28,7 @@ const InboxItem = ({ mail }: Props) => {
       className={cn("border-b", !mail.isReaded && "bg-purple-50")}
     >
       <Link
-        onClick={() => markAsRead(mail.id)}
+        onClick={() => (mail.isReaded ? null : markAsRead(mail.id))}
         href={`/${mail.id}`}
         className="flex items-center flex-1 gap-10"
       >
