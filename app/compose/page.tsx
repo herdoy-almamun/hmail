@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { User } from "@prisma/client";
 import { Flex, Grid } from "@radix-ui/themes";
 import axios from "axios";
-import { Paperclip } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { AuthContext } from "../auth-provider";
@@ -67,7 +66,9 @@ const Compose = () => {
         />
         <Flex align="center" gap="3" className="border-t">
           <Button
-            onClick={() =>
+            disabled={!receiver || !subject || !body}
+            onClick={() => {
+              if (!receiver || !subject || !body) return;
               axios
                 .post("/api/mails", {
                   sender: user?.email,
@@ -80,14 +81,11 @@ const Compose = () => {
                   setSubject("");
                   setBody("");
                   toast.success("Successfully sent mail");
-                })
-            }
+                });
+            }}
             type="submit"
           >
             Sent
-          </Button>
-          <Button variant="ghost">
-            <Paperclip />
           </Button>
         </Flex>
       </Grid>

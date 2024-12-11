@@ -10,9 +10,13 @@ import useMails from "@/hooks/use-mails";
 import { Flex } from "@radix-ui/themes";
 import { Bell } from "lucide-react";
 import Link from "next/link";
+import { useContext } from "react";
+import { AuthContext } from "./auth-provider";
 
 export function HeaderNotification() {
-  const { inboxMails } = useMails();
+  const { user } = useContext(AuthContext);
+  const { mails } = useMails();
+  const inboxMails = mails.filter((m) => m.sender !== user?.email);
   const countUnreadMail = inboxMails.filter((m) => m.isReaded === false).length;
   if (countUnreadMail <= 0)
     return (
