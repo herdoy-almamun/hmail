@@ -70,7 +70,7 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json({ success: true, token }, { status: 201 });
   } catch (err) {
     return NextResponse.json(
-      { success: false, message: "An error occurred during registration" },
+      { success: false, message: "Oops! Something Went Wrong." },
       { status: 500 }
     );
   }

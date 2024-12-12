@@ -7,7 +7,7 @@ export const GET = async (request: NextRequest) => {
     const id = url.searchParams.get("id");
     if (!id)
       return NextResponse.json(
-        { success: false, message: "User not found" },
+        { success: false, message: "User not found." },
         { status: 401 }
       );
     const user = await prisma.user.findUnique({
@@ -16,7 +16,7 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: "Somethig went worn" },
+      { success: false, message: "Oops! Something Went Wrong." },
       { status: 500 }
     );
   }

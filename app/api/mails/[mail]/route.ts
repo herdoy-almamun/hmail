@@ -20,9 +20,8 @@ export async function GET(
 
     return NextResponse.json(mails, { status: 200 });
   } catch (error) {
-    console.error("Error fetching mails:", error);
     return NextResponse.json(
-      { error: "Failed to fetch mails" },
+      { success: false, message: "Oops! Something Went Wrong." },
       { status: 500 }
     );
   }
@@ -48,9 +47,8 @@ export async function PUT(
 
     return NextResponse.json({ success: true, message: "Ok" }, { status: 200 });
   } catch (error) {
-    console.error("Error fetching mails:", error);
     return NextResponse.json(
-      { error: "Failed to fetch mails" },
+      { success: false, message: "Oops! Something Went Wrong." },
       { status: 500 }
     );
   }

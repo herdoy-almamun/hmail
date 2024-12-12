@@ -36,8 +36,8 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json(mail, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: "Please provide valid email" },
-      { status: 400 }
+      { success: false, message: "Oops! Something Went Wrong." },
+      { status: 500 }
     );
   }
 };
@@ -74,7 +74,7 @@ export const POST = async (request: NextRequest) => {
   } catch (error) {
     console.log(error);
     return NextResponse.json(
-      { success: false, message: "An error occurred during sending mail" },
+      { success: false, message: "Oops! Something Went Wrong." },
       { status: 500 }
     );
   }

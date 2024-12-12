@@ -53,7 +53,7 @@ export const POST = async (request: NextRequest) => {
 
     if (!user)
       return NextResponse.json(
-        { success: false, message: "Invalid email or password" },
+        { success: false, message: "Invalid email or password." },
         { status: 401 }
       );
 
@@ -61,7 +61,7 @@ export const POST = async (request: NextRequest) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid)
       return NextResponse.json(
-        { success: false, message: "Invalid email or password" },
+        { success: false, message: "Invalid email or password." },
         { status: 401 }
       );
 
@@ -80,7 +80,7 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json({ success: true, token }, { status: 200 });
   } catch (err) {
     return NextResponse.json(
-      { success: false, message: "An error occurred during login" },
+      { success: false, message: "Oops! Something Went Wrong." },
       { status: 500 }
     );
   }
