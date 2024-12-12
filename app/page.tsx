@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <AuthLayoutProvider>
       <div className="p-2">
-        <InboxMails mails={inboxMails} />
+        <InboxMails mails={inboxMails!} />
       </div>
     </AuthLayoutProvider>
   );

@@ -63,14 +63,11 @@ export const POST = async (request: NextRequest) => {
         { status: 401 }
       );
 
-    await prisma.mail.create({
+    const newMail = await prisma.mail.create({
       data: { sender, receiver, subject, body, image },
     });
 
-    return NextResponse.json(
-      { success: true, message: "Mail send successfully." },
-      { status: 201 }
-    );
+    return NextResponse.json(newMail, { status: 201 });
   } catch (error) {
     console.log(error);
     return NextResponse.json(

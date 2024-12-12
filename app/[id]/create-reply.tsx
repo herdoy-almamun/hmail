@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,6 +13,8 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "../auth-provider";
 import { queryClient } from "../query-client-provider";
+import { toast } from "react-toastify"; // For error or success notifications
+import { PulseLoader } from "react-spinners"; // For spinner (if not already included in the project)
 
 interface Props {
   mailId: string;
@@ -25,10 +28,27 @@ const CreateReply = ({ mailId }: Props) => {
 
   if (!user) return null;
 
+  const handleReply = async () => {
+    if (!reply.trim()) return; // Don't send empty replies
+
+    setLoading(true);
+    try {
+      await axios.post("/api/replays", { mailId, reply, userId: user.id });
+      setReply(""); // Reset the reply input field
+      queryClient.invalidateQueries({ queryKey: ["replays"] }); // Refresh replays data
+      toast.success("Reply sent successfully!");
+      setOpen(false); // Close dialog after sending the reply
+    } catch (error) {
+      toast.error("Failed to send reply, please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Replay</Button>
+        <Button variant="outline">Reply</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -41,22 +61,13 @@ const CreateReply = ({ mailId }: Props) => {
             placeholder="Write your message"
           />
         </div>
-        <div>
+        <div className="flex justify-end">
           <Button
-            disabled={loading}
-            onClick={() => {
-              setLoading(true);
-              axios
-                .post("/api/replays", { mailId, reply, userId: user.id })
-                .then(() => {
-                  setReply("");
-                  queryClient.invalidateQueries({ queryKey: ["replays"] });
-                  setLoading(false);
-                  setOpen(false);
-                });
-            }}
+            disabled={loading || !reply.trim()}
+            onClick={handleReply}
+            className="w-full max-w-[120px]"
           >
-            {loading ? "Loading..." : "Send"}
+            {loading ? <PulseLoader color="#fff" size={10} /> : "Send"}
           </Button>
         </div>
       </DialogContent>

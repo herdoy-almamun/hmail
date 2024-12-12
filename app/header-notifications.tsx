@@ -16,9 +16,11 @@ import { AuthContext } from "./auth-provider";
 export function HeaderNotification() {
   const { user } = useContext(AuthContext);
   const { mails } = useMails();
-  const inboxMails = mails.filter((m) => m.sender !== user?.email);
-  const countUnreadMail = inboxMails.filter((m) => m.isReaded === false).length;
-  if (countUnreadMail <= 0)
+  const inboxMails = mails?.filter((m) => m.sender !== user?.email);
+  const countUnreadMail = inboxMails?.filter(
+    (m) => m.isReaded === false
+  ).length;
+  if (countUnreadMail && countUnreadMail <= 0)
     return (
       <Flex
         align="center"

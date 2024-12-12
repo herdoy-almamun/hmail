@@ -8,7 +8,7 @@ interface Props {
 const InboxMails = ({ mails }: Props) => {
   return (
     <div>
-      {mails.map((mail) => (
+      {mails?.map((mail) => (
         <InboxItem mail={mail} key={mail.id} />
       ))}
     </div>

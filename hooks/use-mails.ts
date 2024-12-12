@@ -1,31 +1,60 @@
 import { AuthContext } from "@/app/auth-provider";
-import { searchInboxMails, searchSentMails } from "@/lib/utils";
 import { useMailQueryStory } from "@/store";
 import { Mail } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useContext } from "react";
 
+// Helper function to fetch mails
+const fetchMails = (url: string) => {
+  return axios.get<Mail[]>(url).then((res) => res.data);
+};
+
 const useMails = () => {
   const { user } = useContext(AuthContext);
-  const subject = useMailQueryStory((s) => s.subject);
+  const subjectInboxMail = useMailQueryStory((s) => s.subjectInboxMail);
+  const subjectSentMail = useMailQueryStory((s) => s.subjectSentMail);
+  const pageNumberInboxMail = useMailQueryStory((s) => s.pageNumberInboxMail);
+  const pageNumberSentMail = useMailQueryStory((s) => s.pageNumberSentMail);
+
   const mail = user?.email;
 
-  const {
-    data: mails = [],
-    isLoading,
-    isError,
-  } = useQuery({
+  // Query for all mails
+  const { data: mails } = useQuery<Mail[]>({
     queryKey: ["mails", mail],
-    queryFn: () =>
-      axios.get<Mail[]>(`/api/mails/${mail}`).then((res) => res.data),
+    queryFn: () => fetchMails(`/api/mails/${mail}`),
     enabled: !!mail,
   });
 
-  const inboxMails = searchInboxMails(mails, subject, mail!);
-  const sentMails = searchSentMails(mails, subject, mail!);
+  // Query for inbox mails
+  const { data: inboxMails } = useQuery<Mail[]>({
+    queryKey: ["inbox-mails", mail, pageNumberInboxMail, subjectInboxMail],
+    queryFn: () => {
+      const params = new URLSearchParams({
+        receiver: mail || "",
+        pageNumber: String(pageNumberInboxMail),
+        subject: subjectInboxMail || "",
+      });
+      return fetchMails(`/api/filter-mails?${params.toString()}`);
+    },
+    enabled: !!mail,
+  });
 
-  return { inboxMails, sentMails, mails, isLoading, isError };
+  // Query for inbox mails
+  const { data: sentMails } = useQuery<Mail[]>({
+    queryKey: ["sent-mails", mail, pageNumberSentMail, subjectSentMail],
+    queryFn: () => {
+      const params = new URLSearchParams({
+        sender: mail || "",
+        pageNumber: String(pageNumberSentMail),
+        subject: subjectSentMail || "",
+      });
+      return fetchMails(`/api/filter-mails?${params.toString()}`);
+    },
+    enabled: !!mail,
+  });
+
+  return { inboxMails, sentMails, mails };
 };
 
 export default useMails;

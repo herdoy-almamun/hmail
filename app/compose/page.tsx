@@ -7,6 +7,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { AuthContext } from "../auth-provider";
+import { queryClient } from "../query-client-provider";
 
 const Compose = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -81,6 +82,8 @@ const Compose = () => {
                   setSubject("");
                   setBody("");
                   toast.success("Successfully sent mail");
+                  queryClient.invalidateQueries({ queryKey: ["mails"] });
+                  queryClient.invalidateQueries({ queryKey: ["sent-mails"] });
                 });
             }}
             type="submit"

@@ -1,23 +1,39 @@
 "use client";
+
 import { queryClient } from "@/app/query-client-provider";
 import useUser from "@/hooks/use-user";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"; // Assuming `cn` is an alias for clsx or utility
 import { Mail } from "@prisma/client";
 import { Avatar, Flex } from "@radix-ui/themes";
 import axios from "axios";
 import { Ellipsis, Mail as MailIcon, MailOpen } from "lucide-react";
 import Link from "next/link";
+import { useCallback } from "react";
 
 interface Props {
   mail: Mail;
 }
 
 const InboxItem = ({ mail }: Props) => {
+  // Use safe navigation and ensure sender data is available
   const { data: sender } = useUser(mail.sender);
-  const markAsRead = (id: string) =>
+
+  // Callback to mark mail as read
+  const markAsRead = useCallback((id: string) => {
     axios
       .put(`/api/mails/${id}`)
-      .then(() => queryClient.invalidateQueries({ queryKey: ["mails"] }));
+      .then(() => {
+        // Invalidate the query after successful update
+        queryClient.invalidateQueries({ queryKey: ["mails"] });
+        queryClient.invalidateQueries({ queryKey: ["inbox-mails"] });
+      })
+      .catch((error) => {
+        console.error("Failed to mark mail as read:", error);
+      });
+  }, []);
+
+  // Destructure `mail` for clarity
+  const { id, isReaded, subject } = mail;
 
   return (
     <Flex
@@ -25,24 +41,30 @@ const InboxItem = ({ mail }: Props) => {
       justify="between"
       py="2"
       px="4"
-      className={cn("border-b", !mail.isReaded && "bg-purple-50")}
+      className={cn("border-b", !isReaded && "bg-purple-50")}
     >
       <Link
-        onClick={() => (mail.isReaded ? null : markAsRead(mail.id))}
-        href={`/${mail.id}`}
+        onClick={() => !isReaded && markAsRead(id)} // Only mark as read if not already read
+        href={`/${id}`}
         className="flex items-center flex-1 gap-10"
       >
         <Flex align="center" gap="2">
-          <Avatar size="1" src={sender?.image!} fallback={sender?.firstName!} />
+          {/* Use fallback properly for Avatar image */}
+          <Avatar
+            size="1"
+            src={sender?.image ?? undefined}
+            fallback={sender?.firstName ?? "User"}
+          />
           <p>
-            {sender?.firstName} {sender?.lastName}{" "}
+            {sender?.firstName} {sender?.lastName}
           </p>
         </Flex>
-        <p className="hidden lg:block"> {mail.subject} </p>
+        <p className="hidden lg:block">{subject}</p>
       </Link>
       <Flex align="center" gap="4">
-        <div className="cursor-pointer" onClick={() => markAsRead(mail.id)}>
-          {mail.isReaded ? <MailOpen /> : <MailIcon />}
+        {/* Toggle icon depending on whether the mail is read */}
+        <div className="cursor-pointer" onClick={() => markAsRead(id)}>
+          {isReaded ? <MailOpen /> : <MailIcon />}
         </div>
         <Ellipsis />
       </Flex>

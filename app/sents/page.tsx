@@ -4,6 +4,7 @@ import SentMails from "@/components/sent-mails";
 import useMails from "@/hooks/use-mails";
 const SentMailsPage = () => {
   const { sentMails } = useMails();
+  if (!sentMails) return null;
   return (
     <AuthLayoutProvider>
       <div className="p-2">
