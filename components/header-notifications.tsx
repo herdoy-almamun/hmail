@@ -1,4 +1,5 @@
 "use client";
+import { AuthContext } from "@/app/auth-provider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +12,6 @@ import { Flex } from "@radix-ui/themes";
 import { Bell } from "lucide-react";
 import Link from "next/link";
 import { useContext } from "react";
-import { AuthContext } from "./auth-provider";
 
 export function HeaderNotification() {
   const { user } = useContext(AuthContext);

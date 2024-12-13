@@ -1,14 +1,12 @@
-"use client";
 import AuthLayoutProvider from "@/components/auth-layout-provider";
-import SentMails from "@/components/sent-mails";
-import useMails from "@/hooks/use-mails";
+import SentMails from "@/app/sents/sent-mails";
+import Header from "./header";
 const SentMailsPage = () => {
-  const { sentMails } = useMails();
-  if (!sentMails) return null;
   return (
     <AuthLayoutProvider>
+      <Header />
       <div className="p-2">
-        <SentMails mails={sentMails} />
+        <SentMails />
       </div>
     </AuthLayoutProvider>
   );

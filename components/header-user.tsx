@@ -1,6 +1,5 @@
 "use client";
 
-import { BadgeCheck, LogOut } from "lucide-react";
 import { AuthContext } from "@/app/auth-provider";
 import {
   DropdownMenu,
@@ -13,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { deleteCookie } from "@/lib/utils";
 import { Avatar } from "@radix-ui/themes";
+import { BadgeCheck, LogOut } from "lucide-react";
 import Image from "next/image";
 import { useContext } from "react";
 

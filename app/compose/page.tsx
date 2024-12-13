@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { AuthContext } from "../auth-provider";
 import { queryClient } from "../query-client-provider";
+import Header from "./header";
 
 const Compose = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -26,6 +27,7 @@ const Compose = () => {
 
   return (
     <AuthLayoutProvider>
+      <Header />
       <Grid className="h-[calc(100dvh-4rem)] px-2" rows="50px 50px 1fr 50px">
         <div className="relative border-b w-full">
           <input

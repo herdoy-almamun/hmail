@@ -1,15 +1,14 @@
 "use client";
 
 import { HeaderNotification } from "@/components/header-notifications";
+import { HeaderUser } from "@/components/header-user";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useMailQueryStory } from "@/store";
 import { Flex } from "@radix-ui/themes";
 import { Search } from "lucide-react";
-import { HeaderUser } from "../components/header-user";
 
 const Header = () => {
-  const setSubjectInboxMail = useMailQueryStory((s) => s.setSubjectInboxMail);
-
+  const setSubjectSentMail = useMailQueryStory((s) => s.setSubjectSentMail);
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b">
       <div className="flex items-center gap-4 px-4 w-full">
@@ -18,7 +17,7 @@ const Header = () => {
           <Search />
           <input
             type="text"
-            onChange={(e) => setSubjectInboxMail(e.target.value)}
+            onChange={(e) => setSubjectSentMail(e.target.value)}
             className="focus:outline-none border-none w-full"
             placeholder="Search mail"
           />
