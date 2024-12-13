@@ -3,25 +3,25 @@ import { create } from "zustand";
 interface MailQuery {
   subjectInboxMail: string;
   subjectSentMail: string;
-  pageNumberInboxMail: string;
-  pageNumberSentMail: string;
+  pageNumberInboxMail: number;
+  pageNumberSentMail: number;
   setSubjectInboxMail: (subject: string) => void;
   setSubjectSentMail: (subject: string) => void;
-  setPageNumberInboxMail: (subject: string) => void;
-  setPageNumberSentMail: (subject: string) => void;
+  setPageNumberInboxMail: (subject: number) => void;
+  setPageNumberSentMail: (subject: number) => void;
 }
 
 export const useMailQueryStory = create<MailQuery>((set) => ({
   subjectInboxMail: "",
   subjectSentMail: "",
-  pageNumberInboxMail: "",
-  pageNumberSentMail: "",
+  pageNumberInboxMail: 1,
+  pageNumberSentMail: 1,
   setSubjectInboxMail: (subjectInboxMail: string) =>
     set(() => ({ subjectInboxMail })),
   setSubjectSentMail: (subjectSentMail: string) =>
     set(() => ({ subjectSentMail })),
-  setPageNumberInboxMail: (pageNumberInboxMail: string) =>
+  setPageNumberInboxMail: (pageNumberInboxMail: number) =>
     set(() => ({ pageNumberInboxMail })),
-  setPageNumberSentMail: (pageNumberSentMail: string) =>
+  setPageNumberSentMail: (pageNumberSentMail: number) =>
     set(() => ({ pageNumberSentMail })),
 }));

@@ -1,12 +1,14 @@
-"use client";
-import useMails from "@/hooks/use-mails";
+import { Mail } from "@prisma/client";
 import SentItem from "../../components/sent-item";
 
-const SentMails = () => {
-  const { sentMails } = useMails();
+interface Props {
+  mails: Mail[];
+}
+
+const SentMails = ({ mails }: Props) => {
   return (
     <div>
-      {sentMails?.map((mail) => (
+      {mails?.map((mail) => (
         <SentItem mail={mail} key={mail.id} />
       ))}
     </div>

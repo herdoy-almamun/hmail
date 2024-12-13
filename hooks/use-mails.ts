@@ -32,7 +32,8 @@ const useMails = () => {
     queryFn: () => {
       const params = new URLSearchParams({
         receiver: mail || "",
-        pageNumber: String(pageNumberInboxMail),
+        page: pageNumberInboxMail.toString(),
+        pageSize: "10",
         subject: subjectInboxMail || "",
       });
       return fetchMails(`/api/filter-mails?${params.toString()}`);
@@ -46,7 +47,8 @@ const useMails = () => {
     queryFn: () => {
       const params = new URLSearchParams({
         sender: mail || "",
-        pageNumber: String(pageNumberSentMail),
+        page: pageNumberSentMail.toString(),
+        pageSize: "10",
         subject: subjectSentMail || "",
       });
       return fetchMails(`/api/filter-mails?${params.toString()}`);

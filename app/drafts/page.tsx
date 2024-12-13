@@ -1,7 +1,13 @@
 import AuthLayoutProvider from "@/components/auth-layout-provider";
+import Header from "./header";
 
 const Drafts = () => {
-  return <AuthLayoutProvider>Drafts</AuthLayoutProvider>;
+  return (
+    <AuthLayoutProvider>
+      <Header />
+      Drafts
+    </AuthLayoutProvider>
+  );
 };
 
 export default Drafts;

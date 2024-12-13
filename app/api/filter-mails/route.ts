@@ -4,7 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 export const GET = async (request: NextRequest) => {
   try {
     const url = new URL(request.url);
-    const pageNumber = parseInt(url.searchParams.get("pageNumber")!) || 1;
+    const page = parseInt(url.searchParams.get("page")!) || 1;
+    const pageSize = parseInt(url.searchParams.get("pageSize")!) || 10;
     const receiver = url.searchParams.get("receiver");
     const sender = url.searchParams.get("sender");
     const subject = url.searchParams.get("subject");
@@ -18,8 +19,8 @@ export const GET = async (request: NextRequest) => {
           mode: "insensitive",
         },
       },
-      skip: (pageNumber - 1) * 5,
-      take: 5,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       orderBy: {
         createdAt: "desc",
       },

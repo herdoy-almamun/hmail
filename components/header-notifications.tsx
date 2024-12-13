@@ -20,7 +20,7 @@ export function HeaderNotification() {
   const countUnreadMail = inboxMails?.filter(
     (m) => m.isReaded === false
   ).length;
-  if (countUnreadMail && countUnreadMail <= 0)
+  if (countUnreadMail === 0)
     return (
       <Flex
         align="center"
