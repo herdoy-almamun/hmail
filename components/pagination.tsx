@@ -1,6 +1,5 @@
 "use client";
-import { useMailQueryStory } from "@/store";
-import { Button, Flex } from "@radix-ui/themes";
+
 import {
   ChevronLeft,
   ChevronRight,
@@ -8,27 +7,27 @@ import {
   ChevronsRight,
 } from "lucide-react";
 
+import { Button, Flex } from "@radix-ui/themes";
+import { useRouter, useSearchParams } from "next/navigation";
+
 interface Poprs {
   itemsCount: number;
   pageSize: number;
   currentPage: number;
-  mails: "inbox" | "sent";
 }
 
-const Pagination = ({ itemsCount, pageSize, currentPage, mails }: Poprs) => {
-  const setPageNumberInboxMail = useMailQueryStory(
-    (s) => s.setPageNumberInboxMail
-  );
-  const setPageNumberSentMail = useMailQueryStory(
-    (s) => s.setPageNumberSentMail
-  );
+const Pagination = ({ itemsCount, pageSize, currentPage }: Poprs) => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   const pageCount = Math.ceil(itemsCount / pageSize);
   if (pageCount <= 1) return null;
 
   const handlePageChange = (page: number) => {
-    mails === "inbox" && setPageNumberInboxMail(page);
-    mails === "sent" && setPageNumberSentMail(page);
+    const params = new URLSearchParams(searchParams.toString());
+    page === 1 ? params.delete("page") : params.set("page", page.toString());
+    const query = params.toString();
+    router.push("?" + query);
   };
 
   return (

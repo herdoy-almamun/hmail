@@ -1,32 +1,42 @@
-"use client";
-import InboxMails from "@/app/inbox-mails";
 import AuthLayoutProvider from "@/components/auth-layout-provider";
 import Pagination from "@/components/pagination";
-import useMails from "@/hooks/use-mails";
-import { countInboxMail } from "@/lib/actions";
-import { useMailQueryStory } from "@/store";
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "./auth-provider";
-import Header from "./header";
-const Home = () => {
-  const [itemsCount, setItemsCount] = useState(0);
-  const { user } = useContext(AuthContext);
-  useEffect(() => {
-    countInboxMail(user?.email!).then((res) => setItemsCount(res));
-  }, [user]);
-  const { inboxMails } = useMails();
-  const currentPage = useMailQueryStory((s) => s.pageNumberInboxMail);
-  if (!inboxMails) return null;
+import { getUser } from "@/lib/actions";
+import prisma from "@/prisma/client";
+import InboxMails from "./inbox-mails";
+
+type SearchParams = Promise<{ page: string; subject: string }>;
+
+const Home = async (props: { searchParams: SearchParams }) => {
+  const searchParams = await props.searchParams;
+  const page = parseInt(searchParams.page) || 1;
+  const pageSize = 5;
+  const subject = searchParams.subject;
+
+  const fetchUser = await getUser();
+  const user = fetchUser.user;
+  const itemsCount = await prisma.mail.count({
+    where: {
+      receiver: user?.email,
+      subject: { startsWith: subject, mode: "insensitive" },
+    },
+  });
+  const inboxMails = await prisma.mail.findMany({
+    where: {
+      subject: { startsWith: subject, mode: "insensitive" },
+      receiver: user?.email ? user.email : undefined,
+    },
+    skip: (page - 1) * 1,
+    take: pageSize,
+  });
+
   return (
     <AuthLayoutProvider>
-      <Header />
       <div className="p-2">
         <InboxMails mails={inboxMails} />
         <Pagination
-          mails="inbox"
-          pageSize={10}
+          pageSize={pageSize}
           itemsCount={itemsCount}
-          currentPage={currentPage}
+          currentPage={page}
         />
       </div>
     </AuthLayoutProvider>

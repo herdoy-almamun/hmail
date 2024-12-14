@@ -1,3 +1,4 @@
+"use client";
 import useUser from "@/hooks/use-user";
 import { Mail } from "@prisma/client";
 import { Avatar, Flex } from "@radix-ui/themes";

@@ -1,5 +1,5 @@
 import { Mail } from "@prisma/client";
-import SentItem from "../../components/sent-item";
+import SentItem from "./sent-item";
 
 interface Props {
   mails: Mail[];
@@ -8,7 +8,7 @@ interface Props {
 const SentMails = ({ mails }: Props) => {
   return (
     <div>
-      {mails?.map((mail) => (
+      {mails.map((mail) => (
         <SentItem mail={mail} key={mail.id} />
       ))}
     </div>
