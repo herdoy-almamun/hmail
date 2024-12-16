@@ -1,41 +1,27 @@
+"use client";
 import AuthLayoutProvider from "@/components/auth-layout-provider";
 import Pagination from "@/components/pagination";
-import { getUser } from "@/lib/actions";
-import prisma from "@/prisma/client";
+import { useInboxMails } from "@/hooks/use-inbox-mails";
+import { useInboxMailQueryStory } from "@/store";
+import { useContext } from "react";
+import { AuthContext } from "./auth-provider";
 import InboxMails from "./inbox-mails";
 
-type SearchParams = Promise<{ page: string; subject: string }>;
-
-const Home = async (props: { searchParams: SearchParams }) => {
-  const searchParams = await props.searchParams;
-  const page = parseInt(searchParams.page) || 1;
-  const pageSize = 5;
-  const subject = searchParams.subject;
-
-  const fetchUser = await getUser();
-  const user = fetchUser.user;
-  const itemsCount = await prisma.mail.count({
-    where: {
-      receiver: user?.email,
-      subject: { startsWith: subject, mode: "insensitive" },
-    },
-  });
-  const inboxMails = await prisma.mail.findMany({
-    where: {
-      subject: { startsWith: subject, mode: "insensitive" },
-      receiver: user?.email ? user.email : undefined,
-    },
-    skip: (page - 1) * 1,
-    take: pageSize,
-  });
-
+const Home = () => {
+  const { user } = useContext(AuthContext);
+  const page = useInboxMailQueryStory((s) => s.page);
+  const pageSize = useInboxMailQueryStory((s) => s.pageSize);
+  const setPage = useInboxMailQueryStory((s) => s.setPage);
+  const { data } = useInboxMails(user?.email!);
+  if (!data) return null;
   return (
     <AuthLayoutProvider>
       <div className="p-2">
-        <InboxMails mails={inboxMails} />
+        <InboxMails mails={data.data} />
         <Pagination
+          itemsCount={data.count}
           pageSize={pageSize}
-          itemsCount={itemsCount}
+          setPage={setPage}
           currentPage={page}
         />
       </div>

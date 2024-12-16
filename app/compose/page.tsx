@@ -82,7 +82,6 @@ const Compose = () => {
                   setSubject("");
                   setBody("");
                   toast.success("Successfully sent mail");
-                  queryClient.invalidateQueries({ queryKey: ["mails"] });
                   queryClient.invalidateQueries({ queryKey: ["sent-mails"] });
                 });
             }}

@@ -1,45 +1,28 @@
+"use client";
 import AuthLayoutProvider from "@/components/auth-layout-provider";
 import Pagination from "@/components/pagination";
-import { getUser } from "@/lib/actions";
-import prisma from "@/prisma/client";
+import { useSentMails } from "@/hooks/use-sent-mails";
+import { useSentMailQueryStory } from "@/store";
+import { useContext } from "react";
+import { AuthContext } from "../auth-provider";
 import SentMails from "./sent-mails";
 
-type SearchParams = Promise<{ page: string; subject: string }>;
-
-const SentItems = async (props: { searchParams: SearchParams }) => {
-  const searchParams = await props.searchParams;
-  const page = parseInt(searchParams.page) || 1;
-  const pageSize = 5;
-  const subject = searchParams.subject;
-
-  const fetchUser = await getUser();
-  const user = fetchUser.user;
-  const itemsCount = await prisma.mail.count({
-    where: {
-      sender: user?.email,
-      subject: {
-        startsWith: subject ? subject : undefined,
-        mode: "insensitive",
-      },
-    },
-  });
-  const sentMails = await prisma.mail.findMany({
-    where: {
-      subject: { startsWith: subject, mode: "insensitive" },
-      sender: user?.email ? user.email : undefined,
-    },
-    skip: (page - 1) * 1,
-    take: pageSize,
-  });
-
+const SentItems = () => {
+  const { user } = useContext(AuthContext);
+  const page = useSentMailQueryStory((s) => s.page);
+  const pageSize = useSentMailQueryStory((s) => s.pageSize);
+  const setPage = useSentMailQueryStory((s) => s.setPage);
+  const { data } = useSentMails(user?.email!);
+  if (!data) return null;
   return (
     <AuthLayoutProvider>
       <div className="p-2">
-        <SentMails mails={sentMails} />
+        <SentMails mails={data.data} />
         <Pagination
+          itemsCount={data.count}
           pageSize={pageSize}
-          itemsCount={itemsCount}
           currentPage={page}
+          setPage={setPage}
         />
       </div>
     </AuthLayoutProvider>

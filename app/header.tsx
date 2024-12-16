@@ -2,13 +2,13 @@
 
 import { HeaderNotification } from "@/components/header-notifications";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { useMailQueryStory } from "@/store";
+import { useInboxMailQueryStory } from "@/store";
 import { Flex } from "@radix-ui/themes";
 import { Search } from "lucide-react";
 import { HeaderUser } from "../components/header-user";
 
 const Header = () => {
-  const setSubjectInboxMail = useMailQueryStory((s) => s.setSubjectInboxMail);
+  const setSubjectInboxMail = useInboxMailQueryStory((s) => s.setSubject);
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b">

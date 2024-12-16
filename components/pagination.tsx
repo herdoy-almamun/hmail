@@ -8,26 +8,20 @@ import {
 } from "lucide-react";
 
 import { Button, Flex } from "@radix-ui/themes";
-import { useRouter, useSearchParams } from "next/navigation";
 
 interface Poprs {
   itemsCount: number;
   pageSize: number;
   currentPage: number;
+  setPage: (page: number) => void;
 }
 
-const Pagination = ({ itemsCount, pageSize, currentPage }: Poprs) => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
+const Pagination = ({ itemsCount, pageSize, currentPage, setPage }: Poprs) => {
   const pageCount = Math.ceil(itemsCount / pageSize);
   if (pageCount <= 1) return null;
 
   const handlePageChange = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    page === 1 ? params.delete("page") : params.set("page", page.toString());
-    const query = params.toString();
-    router.push("?" + query);
+    setPage(page);
   };
 
   return (

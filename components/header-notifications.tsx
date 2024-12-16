@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import useMails from "@/hooks/use-mails";
+import { useInboxMails } from "@/hooks/use-inbox-mails";
 import { Flex } from "@radix-ui/themes";
 import { Bell } from "lucide-react";
 import Link from "next/link";
@@ -15,11 +15,10 @@ import { useContext } from "react";
 
 export function HeaderNotification() {
   const { user } = useContext(AuthContext);
-  const { mails } = useMails();
-  const inboxMails = mails?.filter((m) => m.sender !== user?.email);
-  const countUnreadMail = inboxMails?.filter(
-    (m) => m.isReaded === false
-  ).length;
+  const { data } = useInboxMails(user?.email!);
+
+  const countUnreadMail = data?.data.filter((m) => m.isReaded === false).length;
+
   if (countUnreadMail === 0)
     return (
       <Flex
