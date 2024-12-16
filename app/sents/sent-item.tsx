@@ -1,8 +1,9 @@
 "use client";
+import { DeleteMail } from "@/components/delete-mail";
 import useUser from "@/hooks/use-user";
 import { Mail } from "@prisma/client";
 import { Avatar, Flex } from "@radix-ui/themes";
-import { Ellipsis, Mail as MailIcon, MailOpen } from "lucide-react";
+import { Mail as MailIcon, MailOpen } from "lucide-react";
 import Link from "next/link";
 
 interface Props {
@@ -28,7 +29,7 @@ const SentItem = ({ mail }: Props) => {
       </Link>
       <Flex align="center" gap="4">
         {mail.isReaded ? <MailOpen /> : <MailIcon />}
-        <Ellipsis />
+        <DeleteMail id={mail.id} />
       </Flex>
     </Flex>
   );

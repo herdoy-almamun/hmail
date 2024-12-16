@@ -76,3 +76,29 @@ export const POST = async (request: NextRequest) => {
     );
   }
 };
+
+export const DELETE = async (request: NextRequest) => {
+  try {
+    const url = new URL(request.url);
+    const id = url.searchParams.get("id");
+    if (!id)
+      return NextResponse.json(
+        { success: false, message: "Provide Mail Id." },
+        { status: 401 }
+      );
+    const isValidMail = await prisma.mail.findUnique({ where: { id } });
+    if (!isValidMail)
+      return NextResponse.json(
+        { success: false, message: "Mail not found." },
+        { status: 401 }
+      );
+
+    const deletedMail = await prisma.mail.delete({ where: { id } });
+    return NextResponse.json(deletedMail, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, message: "Oops! Something Went Wrong." },
+      { status: 500 }
+    );
+  }
+};

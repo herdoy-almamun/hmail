@@ -9,6 +9,7 @@ import axios from "axios";
 import { Ellipsis, Mail as MailIcon, MailOpen } from "lucide-react";
 import Link from "next/link";
 import { useCallback } from "react";
+import { DeleteMail } from "./delete-mail";
 
 interface Props {
   mail: Mail;
@@ -66,7 +67,7 @@ const InboxItem = ({ mail }: Props) => {
         <div className="cursor-pointer" onClick={() => markAsRead(id)}>
           {isReaded ? <MailOpen /> : <MailIcon />}
         </div>
-        <Ellipsis />
+        <DeleteMail id={mail.id} />
       </Flex>
     </Flex>
   );
