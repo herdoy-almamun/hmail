@@ -1,5 +1,6 @@
 "use client";
 import AuthLayoutProvider from "@/components/auth-layout-provider";
+import MailDetailsSkeleton from "@/components/skeletons/mail-details-skeleton";
 import { Separator } from "@/components/ui/separator";
 import useMail from "@/hooks/use-mail";
 import useUser from "@/hooks/use-user";
@@ -7,8 +8,8 @@ import { formatDate } from "@/lib/utils";
 import { Avatar, Flex } from "@radix-ui/themes";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../auth-provider";
-import Replays from "./replays";
 import CreateReply from "./create-reply";
+import Replays from "./replays";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -25,6 +26,8 @@ const MailDetails = ({ params }: Props) => {
   const { data: mail } = useMail(id || "");
 
   const { data: sender } = useUser(mail?.sender!);
+
+  if (!mail && !sender) return <MailDetailsSkeleton />;
 
   return (
     <AuthLayoutProvider>

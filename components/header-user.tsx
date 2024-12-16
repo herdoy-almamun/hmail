@@ -18,7 +18,7 @@ import { useContext } from "react";
 
 export function HeaderUser() {
   const { user } = useContext(AuthContext);
-  if (!user) return null;
+  if (!user) return <Avatar radius="full" src="" fallback="U" />;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:outline-none">

@@ -19,7 +19,7 @@ export function HeaderNotification() {
 
   const countUnreadMail = data?.data.filter((m) => m.isReaded === false).length;
 
-  if (countUnreadMail === 0)
+  if (countUnreadMail === 0 || !data)
     return (
       <Flex
         align="center"

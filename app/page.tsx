@@ -1,6 +1,7 @@
 "use client";
 import AuthLayoutProvider from "@/components/auth-layout-provider";
 import Pagination from "@/components/pagination";
+import MailsKkeleton from "@/components/skeletons/mails-skeleton";
 import { useInboxMails } from "@/hooks/use-inbox-mails";
 import { useInboxMailQueryStory } from "@/store";
 import { useContext } from "react";
@@ -13,7 +14,7 @@ const Home = () => {
   const pageSize = useInboxMailQueryStory((s) => s.pageSize);
   const setPage = useInboxMailQueryStory((s) => s.setPage);
   const { data } = useInboxMails(user?.email!);
-  if (!data) return null;
+  if (!data) return <MailsKkeleton />;
   return (
     <AuthLayoutProvider>
       <div className="p-2">
