@@ -1,5 +1,6 @@
 "use client";
 
+import useAuthUser from "@/hooks/use-auth-user";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import { createContext, ReactNode, useEffect, useState } from "react";
@@ -23,22 +24,25 @@ interface Props {
 }
 
 const AuthProvider = ({ children }: Props) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await axios.get("/api/auth/token");
         const decodedUser = jwt.decode(res.data) as User;
-        setUser(decodedUser);
+        setUserId(decodedUser.id);
       } catch (error) {
-        setUser(null);
+        setUserId("");
       }
     };
 
     fetchUser();
   }, []);
 
+  const { data: user } = useAuthUser(userId);
+
+  if (!user) return <> {children} </>;
   return (
     <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
   );

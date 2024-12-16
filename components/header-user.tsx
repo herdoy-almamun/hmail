@@ -14,9 +14,11 @@ import { deleteCookie } from "@/lib/utils";
 import { Avatar } from "@radix-ui/themes";
 import { BadgeCheck, LogOut } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useContext } from "react";
 
 export function HeaderUser() {
+  const router = useRouter();
   const { user } = useContext(AuthContext);
   if (!user) return <Avatar radius="full" src="" fallback="U" />;
   return (
@@ -44,7 +46,7 @@ export function HeaderUser() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/account")}>
             <BadgeCheck />
             Account
           </DropdownMenuItem>
