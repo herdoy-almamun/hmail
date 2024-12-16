@@ -49,6 +49,17 @@ export const POST = async (request: NextRequest) => {
       );
 
     const { firstName, lastName, email, password } = data;
+
+    const idExist = await prisma.user.findUnique({ where: { email } });
+    if (idExist)
+      return NextResponse.json(
+        {
+          success: false,
+          message: "User already exist.",
+        },
+        { status: 401 }
+      );
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 

@@ -14,7 +14,9 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import axios from "axios";
 import Joi from "joi";
 import { joiPasswordExtendCore } from "joi-password";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { BeatLoader } from "react-spinners";
 import { toast } from "react-toastify";
 
 interface FormData {
@@ -42,6 +44,7 @@ const formSchema = Joi.object({
 });
 
 const LoginForm = () => {
+  const [isLoading, setLoading] = useState(false);
   const form = useForm<FormData>({
     resolver: joiResolver(formSchema),
     defaultValues: {
@@ -51,9 +54,11 @@ const LoginForm = () => {
   });
 
   const onSubmit = form.handleSubmit((data) => {
+    setLoading(true);
     axios
       .post("/api/auth/login", data)
       .then((res) => {
+        setLoading(false);
         if (res.data.success && res.data.token) {
           document.cookie = `token=${res.data.token}; path=/; Secure; SameSite=Strict`;
           toast.success("Login Success");
@@ -63,6 +68,7 @@ const LoginForm = () => {
         }
       })
       .catch((error) => {
+        setLoading(false);
         if (error.response.status === 401) {
           toast.error(error.response.data.message);
         }
@@ -104,8 +110,8 @@ const LoginForm = () => {
             </FormItem>
           )}
         />
-        <Button className="w-full" type="submit">
-          Log In
+        <Button disabled={isLoading} className="w-full" type="submit">
+          {isLoading ? <BeatLoader color="#fff" /> : "Log In"}
         </Button>
       </form>
     </Form>

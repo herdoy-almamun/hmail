@@ -15,7 +15,9 @@ import { Grid } from "@radix-ui/themes";
 import axios from "axios";
 import Joi from "joi";
 import { joiPasswordExtendCore } from "joi-password";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { BeatLoader } from "react-spinners";
 import { toast } from "react-toastify";
 
 interface FormData {
@@ -46,6 +48,7 @@ const formSchema = Joi.object({
 });
 
 const RegisterForm = () => {
+  const [isLoading, setLoading] = useState(false);
   const form = useForm<FormData>({
     resolver: joiResolver(formSchema),
     defaultValues: {
@@ -57,9 +60,11 @@ const RegisterForm = () => {
   });
 
   const onSubmit = form.handleSubmit((data) => {
+    setLoading(true);
     axios
       .post("/api/auth/register", data)
       .then((res) => {
+        setLoading(false);
         if (res.data.success && res.data.token) {
           document.cookie = `token=${res.data.token}; path=/; Secure; SameSite=Strict`;
           toast.success("Register Success");
@@ -69,6 +74,7 @@ const RegisterForm = () => {
         }
       })
       .catch((error) => {
+        setLoading(false);
         if (error.response.status === 401) {
           toast.error(error.response.data.message);
         }
@@ -142,8 +148,8 @@ const RegisterForm = () => {
             </FormItem>
           )}
         />
-        <Button className="w-full" type="submit">
-          Submit
+        <Button disabled={isLoading} className="w-full" type="submit">
+          {isLoading ? <BeatLoader /> : "Submit"}
         </Button>
       </form>
     </Form>
