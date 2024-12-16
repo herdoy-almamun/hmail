@@ -17,7 +17,12 @@ const validateUser = (user: User) => {
   const schema = Joi.object({
     firstName: Joi.string().min(1).max(255).required(),
     lastName: Joi.string().min(1).max(255).required(),
-    email: Joi.string().email().max(255).required(),
+    email: Joi.string()
+      .email({ tlds: { allow: false } })
+      .regex(/^[^\s@]+@hmail\.com$/, "Email Must End With @hmail.com")
+      .max(1000)
+      .required()
+      .label("Email"),
     password: joiPassword
       .string()
       .minOfSpecialCharacters(2)
@@ -55,7 +60,7 @@ export const POST = async (request: NextRequest) => {
       return NextResponse.json(
         {
           success: false,
-          message: "User already exist.",
+          message: "Email already been taken",
         },
         { status: 401 }
       );

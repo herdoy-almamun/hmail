@@ -5,11 +5,13 @@ import { User } from "@prisma/client";
 import { Flex, Grid } from "@radix-ui/themes";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
+import { BeatLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import { AuthContext } from "../auth-provider";
 import { queryClient } from "../query-client-provider";
 
 const Compose = () => {
+  const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [receiver, setReceiver] = useState("");
   const [subject, setSubject] = useState("");
@@ -67,9 +69,12 @@ const Compose = () => {
         />
         <Flex align="center" gap="3" className="border-t">
           <Button
-            disabled={!receiver || !subject || !body}
+            disabled={!receiver || !subject || !body || loading}
             onClick={() => {
+              setLoading(true);
               if (!receiver || !subject || !body) return;
+              if (!receiver.endsWith("@hmail.com"))
+                return toast.error("Invalid Email");
               axios
                 .post("/api/mails", {
                   sender: user?.email,
@@ -78,16 +83,21 @@ const Compose = () => {
                   body,
                 })
                 .then(() => {
+                  setLoading(false);
                   setReceiver("");
                   setSubject("");
                   setBody("");
                   toast.success("Successfully sent mail");
                   queryClient.invalidateQueries({ queryKey: ["sent-mails"] });
+                })
+                .catch((err) => {
+                  setLoading(false);
+                  console.log(err);
                 });
             }}
             type="submit"
           >
-            Sent
+            {loading ? <BeatLoader /> : "Sent"}
           </Button>
         </Flex>
       </Grid>

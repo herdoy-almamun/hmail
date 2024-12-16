@@ -23,7 +23,7 @@ export default function Account() {
           <Avatar
             src={user.image}
             fallback={user.lastName}
-            size={{ initial: "5", md: "9" }}
+            size="9"
             radius="full"
           />
           <EditProfileImage />

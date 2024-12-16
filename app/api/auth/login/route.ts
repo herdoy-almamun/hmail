@@ -13,7 +13,12 @@ interface LoginData {
 const validateLoginData = (data: LoginData) => {
   const joiPassword = Joi.extend(joiPasswordExtendCore);
   const schema = Joi.object({
-    email: Joi.string().email().max(255).required(),
+    email: Joi.string()
+      .email({ tlds: { allow: false } })
+      .regex(/^[^\s@]+@hmail\.com$/, "Email Must End With @hmail.com")
+      .max(1000)
+      .required()
+      .label("Email"),
     password: joiPassword
       .string()
       .minOfSpecialCharacters(2)

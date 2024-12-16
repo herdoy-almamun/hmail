@@ -32,6 +32,7 @@ const formSchema = Joi.object({
   lastName: Joi.string().min(1).max(255).required().label("Last Name"),
   email: Joi.string()
     .email({ tlds: { allow: false } })
+    .regex(/^[^\s@]+@hmail\.com$/, "Email Must End With @hmail.com")
     .max(1000)
     .required()
     .label("Email"),
