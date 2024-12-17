@@ -29,8 +29,10 @@ const joiPassword = Joi.extend(joiPasswordExtendCore);
 const formSchema = Joi.object({
   email: Joi.string()
     .email({ tlds: { allow: false } })
-    .max(255)
-    .required(),
+    .regex(/^[^\s@]+@hmail\.com$/, "Email Must End With @hmail.com")
+    .max(1000)
+    .required()
+    .label("Email"),
   password: joiPassword
     .string()
     .minOfSpecialCharacters(2)

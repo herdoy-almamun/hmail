@@ -1,5 +1,6 @@
 "use client";
 import AuthLayoutProvider from "@/components/auth-layout-provider";
+import Empty from "@/components/empty";
 import Pagination from "@/components/pagination";
 import MailsKkeleton from "@/components/skeletons/mails-skeleton";
 import { useSentMails } from "@/hooks/use-sent-mails";
@@ -15,6 +16,7 @@ const SentItems = () => {
   const setPage = useSentMailQueryStory((s) => s.setPage);
   const { data } = useSentMails(user?.email!);
   if (!data) return <MailsKkeleton />;
+  if (data.count === 0) return <Empty />;
   return (
     <AuthLayoutProvider>
       <div className="p-2">
