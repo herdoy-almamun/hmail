@@ -16,11 +16,10 @@ const SentItems = () => {
   const setPage = useSentMailQueryStory((s) => s.setPage);
   const { data } = useSentMails(user?.email!);
   if (!data) return <MailsKkeleton />;
-  if (data.count === 0) return <Empty />;
   return (
     <AuthLayoutProvider>
       <div className="p-2">
-        <SentMails mails={data.data} />
+        {data.count === 0 ? <Empty /> : <SentMails mails={data.data} />}
         <Pagination
           itemsCount={data.count}
           pageSize={pageSize}

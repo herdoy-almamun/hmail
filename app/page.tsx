@@ -16,11 +16,11 @@ const Home = () => {
   const setPage = useInboxMailQueryStory((s) => s.setPage);
   const { data } = useInboxMails(user?.email!);
   if (!data) return <MailsKkeleton />;
-  if (data.count === 0) return <Empty />;
+
   return (
     <AuthLayoutProvider>
       <div className="p-2">
-        <InboxMails mails={data.data} />
+        {data.count === 0 ? <Empty /> : <InboxMails mails={data.data} />}
         <Pagination
           itemsCount={data.count}
           pageSize={pageSize}
