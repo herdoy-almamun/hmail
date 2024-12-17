@@ -19,7 +19,11 @@ const SentItems = () => {
   return (
     <AuthLayoutProvider>
       <div className="p-2">
-        {data.count === 0 ? <Empty /> : <SentMails mails={data.data} />}
+        {data.count === 0 ? (
+          <Empty page="Sents" />
+        ) : (
+          <SentMails mails={data.data} />
+        )}
         <Pagination
           itemsCount={data.count}
           pageSize={pageSize}

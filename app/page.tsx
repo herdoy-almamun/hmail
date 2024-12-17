@@ -20,7 +20,11 @@ const Home = () => {
   return (
     <AuthLayoutProvider>
       <div className="p-2">
-        {data.count === 0 ? <Empty /> : <InboxMails mails={data.data} />}
+        {data.count === 0 ? (
+          <Empty page="Inbox" />
+        ) : (
+          <InboxMails mails={data.data} />
+        )}
         <Pagination
           itemsCount={data.count}
           pageSize={pageSize}
