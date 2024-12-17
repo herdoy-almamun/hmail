@@ -11,7 +11,7 @@ export function SidebarBrand() {
       <SidebarMenuItem>
         <Link href="/">
           <SidebarMenuButton>
-            <Image src="/logo.png" width={40} height={40} alt="logo" />
+            <Image src="/logo.png" width={30} height={30} alt="logo" />
             <span className="text-2xl"> Hmail </span>
           </SidebarMenuButton>
         </Link>
