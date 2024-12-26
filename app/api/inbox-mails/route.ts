@@ -4,45 +4,56 @@ import { NextRequest, NextResponse } from "next/server";
 export const GET = async (request: NextRequest) => {
   try {
     const url = new URL(request.url);
-    const page = url.searchParams.get("page");
-    const pageSize = url.searchParams.get("pageSize");
+    const page = Number(url.searchParams.get("page"));
+    const pageSize = Number(url.searchParams.get("pageSize"));
     const user = url.searchParams.get("user");
-    const subject = url.searchParams.get("subject");
+    const subject = url.searchParams.get("subject") || "";
 
+    // Validate query parameters
+    if (!page || !pageSize || !user || page <= 0 || pageSize <= 0) {
+      return NextResponse.json(
+        { success: false, message: "Invalid query parameters" },
+        { status: 400 }
+      );
+    }
+
+    // Fetch total mail count
     const mailCount = await prisma.mail.count({
       where: {
-        receiver: user!,
+        receiver: user,
         subject: {
-          startsWith: subject ? subject : undefined,
+          startsWith: subject,
           mode: "insensitive",
         },
       },
     });
-    const setPage = parseInt(page!) | 1;
-    const setPageSize = parseInt(pageSize!);
 
+    // Fetch paginated mails
     const mails = await prisma.mail.findMany({
       where: {
-        receiver: user ? user : undefined,
+        receiver: user,
         subject: {
-          startsWith: subject ? subject : undefined,
+          startsWith: subject,
           mode: "insensitive",
         },
       },
-      skip: (setPage - 1) * setPageSize,
-      take: setPageSize,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       orderBy: {
         createdAt: "desc",
       },
     });
+
+    // Return response
     return NextResponse.json(
-      { data: mails, count: mailCount },
+      { success: true, data: mails, count: mailCount },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: any) {
+    console.error("Error fetching mails:", error.message);
     return NextResponse.json(
-      { success: false, message: "Something went worn" },
-      { status: 400 }
+      { success: false, message: "An unexpected error occurred" },
+      { status: 500 }
     );
   }
 };

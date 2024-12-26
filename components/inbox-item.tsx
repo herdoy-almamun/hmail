@@ -10,6 +10,7 @@ import { Ellipsis, Mail as MailIcon, MailOpen } from "lucide-react";
 import Link from "next/link";
 import { useCallback } from "react";
 import { DeleteMail } from "./delete-mail";
+import useRead from "@/hooks/useRead";
 
 interface Props {
   mail: Mail;
@@ -19,19 +20,7 @@ const InboxItem = ({ mail }: Props) => {
   // Use safe navigation and ensure sender data is available
   const { data: sender } = useUser(mail.sender);
 
-  // Callback to mark mail as read
-  const markAsRead = useCallback((id: string) => {
-    axios
-      .put(`/api/mails/${id}`)
-      .then(() => {
-        // Invalidate the query after successful update
-        queryClient.invalidateQueries({ queryKey: ["mails"] });
-        queryClient.invalidateQueries({ queryKey: ["inbox-mails"] });
-      })
-      .catch((error) => {
-        console.error("Failed to mark mail as read:", error);
-      });
-  }, []);
+  const { mutate } = useRead();
 
   // Destructure `mail` for clarity
   const { id, isReaded, subject } = mail;
@@ -45,7 +34,7 @@ const InboxItem = ({ mail }: Props) => {
       className={cn("border-b", !isReaded && "bg-purple-50")}
     >
       <Link
-        onClick={() => !isReaded && markAsRead(id)} // Only mark as read if not already read
+        onClick={() => !isReaded && mutate(mail.id)} // Only mark as read if not already read
         href={`/${id}`}
         className="flex items-center flex-1 gap-10"
       >
@@ -64,7 +53,7 @@ const InboxItem = ({ mail }: Props) => {
       </Link>
       <Flex align="center" gap="4">
         {/* Toggle icon depending on whether the mail is read */}
-        <div className="cursor-pointer" onClick={() => markAsRead(id)}>
+        <div className="cursor-pointer" onClick={() => mutate(mail.id)}>
           {isReaded ? <MailOpen /> : <MailIcon />}
         </div>
         <DeleteMail id={mail.id} />
